@@ -25,7 +25,7 @@ def main():
             red_value = st.slider('Red', 0, 255,)
             green_value = st.slider('Green', 0, 255,)
             blue_value = st.slider('Blue', 0, 255,)
-            n_clusters = st.number_input('Insert a number of cluster', min_value = 3)
+            n_clusters = st.number_input('Insert a number of cluster', min_value = 2)
             st.write('   Red Value:', red_value,    '   Green Value:', green_value,    'Blue Value:', blue_value,    '   Number of Cluster:', n_clusters)
 
         img = load_image(image_file)
@@ -136,3 +136,5 @@ if __name__ == "__main__":
 
 
 
+# PROBLEM:
+# Colors doesn't listed with sorted values on color bar you have to cahnge it by sorted values
