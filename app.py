@@ -23,7 +23,8 @@ def main():
         blue_value = st.slider('Blue', 0, 255,)
         green_value = st.slider('Green', 0, 255,)
         red_value = st.slider('Red', 0, 255,)
-        st.write('Blue Value:', blue_value,    '   Green Value:', green_value,    '   Red Value:', red_value)
+        n_clusters = st.number_input('Insert a number of cluster', min_value = 3)
+        st.write('Blue Value:', blue_value,    '   Green Value:', green_value,    '   Red Value:', red_value,    '   Number of Cluster:', n_clusters)
 
         img = load_image(image_file)
         
@@ -82,7 +83,7 @@ def main():
         # resize image
         img = cv2.resize(img_rgb, dim, interpolation=cv2.INTER_AREA)
         flat_img = np.reshape(img,(-1,3))
-        n_clusters = 5
+        # n_clusters = 5
         clt = KMeans(n_clusters=n_clusters)
 
         def palette(clusters):
