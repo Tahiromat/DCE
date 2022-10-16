@@ -77,6 +77,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-
-# PROBLEM:
-# Colors doesn't listed with sorted values on color bar you have to cahnge it by sorted values
