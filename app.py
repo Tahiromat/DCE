@@ -80,10 +80,10 @@ def main():
 # ###################################################################################################################
 
         # resize image
-        img = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
+        img = cv2.resize(img_rgb, dim, interpolation=cv2.INTER_AREA)
         flat_img = np.reshape(img,(-1,3))
         n_clusters = 5
-        clt = KMeans(n_clusters=n_clusters, random_state=0)
+        clt = KMeans(n_clusters=n_clusters)
 
         def palette(clusters):
             width=800
@@ -104,12 +104,11 @@ def main():
         st.image(palette(clt_1))
 
 
-        dominant_colors = np.array(clt.cluster_centers_,dtype='uint')
-        percentages = (np.unique(clt.labels_,return_counts=True)[1])/flat_img.shape[0]
+        dominant_colors = np.array(clt_1.cluster_centers_,dtype='uint')
+        percentages = (np.unique(clt_1.labels_,return_counts=True)[1])/flat_img.shape[0]
         p_and_c = zip(percentages,dominant_colors)
         p_and_c = sorted(p_and_c,reverse=True)
-        st.write(p_and_c[0][0]*100)
-        st.write(list(p_and_c[0][1]))
+        st.write(p_and_c)
 
 
         # for i in range(n_clusters):
