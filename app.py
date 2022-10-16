@@ -1,138 +1,73 @@
-import streamlit as st
-from PIL import Image
-import numpy as np
-from sklearn.cluster import KMeans
-import cv2
-import os
+import streamlit
 
-def load_image(image_file):
-    img = Image.open(image_file)
-    return img
+from models.image_processing_model import ImageProcessingModel
+from models.ui_widgets_model import UIWidgetsModel
+from models.algorithm_model import AlgorithmModel
 
 
 def main():
-    
-    st.title("Dominant Color Analyser")
-    with st.sidebar:
-        image_file = st.file_uploader("Upload Image", type=["PNG", "JPEG", "JPG"])
+
+    streamlit.title("Dominant Color Analyser")
+    with streamlit.sidebar:
+        image_file = UIWidgetsModel().file_uploader()
 
     if image_file is not None:
 
-        with open(os.path.join("saved_images", image_file.name), "wb") as f:
-            f.write(image_file.getbuffer())
+        UIWidgetsModel().save_uploded_image(image_file, "saved_images")
 
-        with st.sidebar:
-            red_value = st.slider('Red', 0, 255,)
-            green_value = st.slider('Green', 0, 255,)
-            blue_value = st.slider('Blue', 0, 255,)
-            n_clusters = st.number_input('Insert a number of cluster', min_value = 2)
-            st.write('   Red Value:', red_value,    '   Green Value:', green_value,    'Blue Value:', blue_value,    '   Number of Cluster:', n_clusters)
+        with streamlit.sidebar:
+            (
+                red_value,
+                green_value,
+                blue_value,
+                n_clusters,
+            ) = UIWidgetsModel().create_slider_for_range_of_colors(
+                ["Red", "Green", "Blue"], [255, 255, 255]
+            )
+            streamlit.write(
+                "   Red Value:",
+                red_value,
+                "   Green Value:",
+                green_value,
+                "Blue Value:",
+                blue_value,
+                "   Number of Cluster:",
+                n_clusters,
+            )
 
-        img = load_image(image_file)
-        
+        col1, col2 = streamlit.columns(2)
 
-# ###################################################################################################################
-        col1, col2 = st.columns(2)
-        
         with col1:
-            st.subheader("Original Image")
-            st.image(img)
-
-
-# ###################################################################################################################
-
-
-
-# ###################################################################################################################
-
-        img = cv2.imread("saved_images/" + image_file.name)
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        dim = (600, 600)
-
-# ###################################################################################################################
-        img_rgb = img.copy()
-        r = img_rgb[:,:,0] 
-        g = img_rgb[:,:,1] 
-        b = img_rgb[:,:,2] 
-
-        # increase the pixel values by 100
-        r = r + red_value    
-        g = g + green_value    
-        b = b + blue_value    
-
-        # if pixel values become > 255, subtract 255 
-        cond = r[:, :] > 255
-        r[cond] = r[cond] - 255 
-
-        cond = g[:, :] > 255
-        g[cond] = g[cond] - 255 
-
-        cond = b[:, :] > 255
-        b[cond] = b[cond] - 255 
-
-        # assign the modified channel to image
-        img_rgb[:,:,0] = r
-        img_rgb[:,:,1] = g 
-        img_rgb[:,:,2] = b 
-
-        
+            bgr_image = ImageProcessingModel().load_bgr_image(image_file)
+            streamlit.subheader("Original 'B-G-R' Image")
+            streamlit.image(bgr_image)
 
         with col2:
-            st.subheader("New Image")
-            st.image(img_rgb)
+            rgb_image = ImageProcessingModel().load_rgb_image(
+                image_file, "saved_images"
+            )
+            rgb_image = ImageProcessingModel().increase_pixel_values(
+                rgb_image, red_value, green_value, blue_value
+            )
+            streamlit.subheader("New 'R-G-B' Image")
+            streamlit.image(rgb_image)
 
+        resized_image = ImageProcessingModel().resize_image(rgb_image, 600, 600)
+        flat_img = ImageProcessingModel().reshape_image(resized_image)
 
-# ###################################################################################################################
+        model = AlgorithmModel().create_model(n_clusters=n_clusters)
 
-        # resize image
-        img = cv2.resize(img_rgb, dim, interpolation=cv2.INTER_AREA)
-        flat_img = np.reshape(img,(-1,3))
-        # n_clusters = 5
-        clt = KMeans(n_clusters=n_clusters)
+        cluster_1 = model.fit(flat_img)
+        streamlit.image(UIWidgetsModel().create_visual_palette_for_clusters(cluster_1))
 
-        def palette(clusters):
-            width=800
-            palette = np.zeros((100, width, 3), np.uint8)
+        percentage_and_zipped_dominance = (
+            AlgorithmModel().zipped_dominance_and_percentage(cluster_1, flat_img)
+        )
+        streamlit.write(percentage_and_zipped_dominance)
 
-            dominant_colors = np.array(clt.cluster_centers_,dtype='uint')
-            percentages = (np.unique(clt.labels_,return_counts=True)[1])/flat_img.shape[0]
-            p_and_c = zip(percentages,dominant_colors)
-            p_and_c = sorted(p_and_c,reverse=True)
-
-            steps = width/clusters.cluster_centers_.shape[0]
-            for idx, centers in enumerate(clusters.cluster_centers_): 
-                palette[:, int(idx*steps):(int((idx+1)*steps)), :] = centers
-            return palette
-        
-        
-        clt_1 = clt.fit(flat_img)
-        st.image(palette(clt_1))
-
-        dominant_colors = np.array(clt_1.cluster_centers_,dtype='uint')
-        percentages = (np.unique(clt_1.labels_,return_counts=True)[1])/flat_img.shape[0]
-        p_and_c = zip(percentages,dominant_colors)
-        p_and_c = sorted(p_and_c,reverse=True)
-        st.write(p_and_c)
-
-
-        # for i in range(n_clusters):
-        #     plt.subplot(1,n_clusters,i+1)
-        #     block[:] = p_and_c[i][1][::-1] # we have done this to convert bgr(opencv) to rgb(matplotlib) 
-        #     # plt.imshow(block)
-        #     plt.xticks([])
-        #     plt.yticks([])
-        #     plt.xlabel(str(round(p_and_c[i][0]*100,2))+'%')
-        #     st.plotly_chart(block)
-       
-# ###################################################################################################################
-
-
-
-    
 
 if __name__ == "__main__":
     main()
-
 
 
 # PROBLEM:
