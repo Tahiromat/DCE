@@ -2,13 +2,8 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 from sklearn.cluster import KMeans
-import matplotlib.pyplot as plt
 import cv2
-from mpl_toolkits.mplot3d import Axes3D
 import os
-import pandas as pd
-from collections import Counter
-import plotly_express as px
 
 def load_image(image_file):
     img = Image.open(image_file)
