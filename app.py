@@ -18,7 +18,7 @@ def main():
 
     if image_file is not None:
 
-        with open(os.path.join("data", image_file.name), "wb") as f:
+        with open(os.path.join("saved_images", image_file.name), "wb") as f:
             f.write(image_file.getbuffer())
 
         with st.sidebar:
@@ -45,7 +45,7 @@ def main():
 
 # ###################################################################################################################
 
-        img = cv2.imread("data/" + image_file.name)
+        img = cv2.imread("saved_images/" + image_file.name)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         dim = (600, 600)
 
