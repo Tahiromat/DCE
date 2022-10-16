@@ -13,18 +13,20 @@ def load_image(image_file):
 def main():
     
     st.title("Dominant Color Analyser")
-    image_file = st.file_uploader("Upload Image", type=["PNG", "JPEG", "JPG"])
+    with st.sidebar:
+        image_file = st.file_uploader("Upload Image", type=["PNG", "JPEG", "JPG"])
 
     if image_file is not None:
 
         with open(os.path.join("saved_images", image_file.name), "wb") as f:
             f.write(image_file.getbuffer())
 
-        blue_value = st.slider('Blue', 0, 255,)
-        green_value = st.slider('Green', 0, 255,)
-        red_value = st.slider('Red', 0, 255,)
-        n_clusters = st.number_input('Insert a number of cluster', min_value = 3)
-        st.write('Blue Value:', blue_value,    '   Green Value:', green_value,    '   Red Value:', red_value,    '   Number of Cluster:', n_clusters)
+        with st.sidebar:
+            red_value = st.slider('Red', 0, 255,)
+            green_value = st.slider('Green', 0, 255,)
+            blue_value = st.slider('Blue', 0, 255,)
+            n_clusters = st.number_input('Insert a number of cluster', min_value = 3)
+            st.write('   Red Value:', red_value,    '   Green Value:', green_value,    'Blue Value:', blue_value,    '   Number of Cluster:', n_clusters)
 
         img = load_image(image_file)
         
@@ -33,6 +35,7 @@ def main():
         col1, col2 = st.columns(2)
         
         with col1:
+            st.subheader("Original Image")
             st.image(img)
 
 
@@ -75,6 +78,7 @@ def main():
         
 
         with col2:
+            st.subheader("New Image")
             st.image(img_rgb)
 
 
