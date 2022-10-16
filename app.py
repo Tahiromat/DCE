@@ -108,7 +108,6 @@ def main():
         clt_1 = clt.fit(flat_img)
         st.image(palette(clt_1))
 
-
         dominant_colors = np.array(clt_1.cluster_centers_,dtype='uint')
         percentages = (np.unique(clt_1.labels_,return_counts=True)[1])/flat_img.shape[0]
         p_and_c = zip(percentages,dominant_colors)
