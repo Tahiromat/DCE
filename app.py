@@ -82,7 +82,7 @@ def main():
         # resize image
         img = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
         flat_img = np.reshape(img,(-1,3))
-        n_clusters = 10
+        n_clusters = 5
         clt = KMeans(n_clusters=n_clusters, random_state=0)
 
         def palette(clusters):
