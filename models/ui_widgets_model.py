@@ -1,6 +1,7 @@
 import os
 import numpy
 import streamlit
+import matplotlib.pyplot as pyplot
 
 
 class UIWidgetsModel:
@@ -25,11 +26,24 @@ class UIWidgetsModel:
         n_clusters = streamlit.number_input("Insert a number of cluster", min_value=2)
         return red_value, green_value, blue_value, n_clusters
 
-    def create_visual_palette_for_clusters(self, clusters):
-        width = 800
-        palette = numpy.zeros((100, width, 3), numpy.uint8)
-
-        steps = width / clusters.cluster_centers_.shape[0]
-        for idx, centers in enumerate(clusters.cluster_centers_):
-            palette[:, int(idx * steps) : (int((idx + 1) * steps)), :] = centers
-        return palette
+    def create_visual_palette_for_clusters(
+        self, n_clusters, percentage_and_dominance_list
+    ):
+        block = numpy.ones((50, 50, 3), dtype="uint")
+        pyplot.figure(figsize=(12, 8))
+        for i in range(len(percentage_and_dominance_list)):
+            pyplot.subplot(1, n_clusters, i + 1)
+            # block[:] = percentage_and_dominance_list[i][1][::-1]
+            block[:] = percentage_and_dominance_list[i][
+                1
+            ]  # bgr(opencv) to rgb(matplotlib)
+            pyplot.imshow(block)
+            pyplot.xticks([])
+            pyplot.yticks([])
+            pyplot.xlabel(
+                str(round(percentage_and_dominance_list[i][0] * 100, 2))
+                + "%"
+                + "\n"
+                + str(percentage_and_dominance_list[i][1])
+            )
+        streamlit.pyplot(pyplot.show())

@@ -15,7 +15,7 @@ class AlgorithmModel:
     def find_dominance_percentage(self, cluster, image):
         return (numpy.unique(cluster.labels_, return_counts=True)[1]) / image.shape[0]
 
-    def zipped_dominance_and_percentage(self, cluster, image):
+    def create_zipped_percentage_and_dominance_list(self, cluster, image):
         return sorted(
             zip(
                 self.find_dominance_percentage(cluster, image),

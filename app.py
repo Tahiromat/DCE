@@ -1,4 +1,8 @@
+import numpy
 import streamlit
+import matplotlib.pyplot as plt
+
+streamlit.set_option("deprecation.showPyplotGlobalUse", False)
 
 from models.image_processing_model import ImageProcessingModel
 from models.ui_widgets_model import UIWidgetsModel
@@ -24,6 +28,7 @@ def main():
             ) = UIWidgetsModel().create_slider_for_range_of_colors(
                 ["Red", "Green", "Blue"], [255, 255, 255]
             )
+
             streamlit.write(
                 "   Red Value:",
                 red_value,
@@ -56,14 +61,17 @@ def main():
         flat_img = ImageProcessingModel().reshape_image(resized_image)
 
         model = AlgorithmModel().create_model(n_clusters=n_clusters)
-
         cluster_1 = model.fit(flat_img)
-        streamlit.image(UIWidgetsModel().create_visual_palette_for_clusters(cluster_1))
 
-        percentage_and_zipped_dominance = (
-            AlgorithmModel().zipped_dominance_and_percentage(cluster_1, flat_img)
+        percentage_and_dominance_list = (
+            AlgorithmModel().create_zipped_percentage_and_dominance_list(
+                cluster_1, flat_img
+            )
         )
-        streamlit.write(percentage_and_zipped_dominance)
+
+        UIWidgetsModel().create_visual_palette_for_clusters(
+            n_clusters, percentage_and_dominance_list
+        )
 
 
 if __name__ == "__main__":
