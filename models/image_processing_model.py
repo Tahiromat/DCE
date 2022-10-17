@@ -22,14 +22,14 @@ class ImageProcessingModel:
         g = image[:, :, 1]
         b = image[:, :, 2]
 
-        cond = r[:, :] > 255
-        r[cond] = r[cond] - 255
+        # cond = r[:, :] > 255
+        # r[cond] = r[cond] - 255
 
-        cond = g[:, :] > 255
-        g[cond] = g[cond] - 255
+        # cond = g[:, :] > 255
+        # g[cond] = g[cond] - 255
 
-        cond = b[:, :] > 255
-        b[cond] = b[cond] - 255
+        # cond = b[:, :] > 255
+        # b[cond] = b[cond] - 255
 
         return r, g, b
 
