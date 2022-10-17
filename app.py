@@ -49,6 +49,7 @@ def main():
         with col1:
             bgr_image = ImageProcessingModel().load_bgr_image(image_file)
             streamlit.subheader("Original 'B-G-R' Image")
+            # streamlit.write(bgr_image)
             streamlit.image(bgr_image)
 
         with col2:
@@ -59,6 +60,7 @@ def main():
                 rgb_image, red_value, green_value, blue_value
             )
             streamlit.subheader("New 'R-G-B' Image")
+            # streamlit.write(rgb_image)
             streamlit.image(rgb_image)
 
         resized_image = ImageProcessingModel().resize_image(rgb_image, 600, 600)

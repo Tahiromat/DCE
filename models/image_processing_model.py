@@ -11,8 +11,10 @@ class ImageProcessingModel:
         return Image.open(file)
 
     def load_rgb_image(self, file, image_path):
-        image = cv2.imread(image_path + "/" + file.name)
-        return cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        # image = cv2.imread(image_path + "/" + file.name)
+        # return cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        # image = cv2.imread(image_path + "/" + file.name)
+        return cv2.imread(image_path + "/" + file.name)
 
     def get_r_g_b_pixel_values(self, image):
 
