@@ -8,6 +8,10 @@ from models.image_processing_model import ImageProcessingModel
 from models.ui_widgets_model import UIWidgetsModel
 from models.algorithm_model import AlgorithmModel
 
+streamlit.set_page_config(page_title="DCE", page_icon="home", layout="centered")
+hide_streamlit_style = """ <style> #MainMenu {visibility: hidden;} footer {visibility: hidden;} </style> """
+streamlit.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 
 def main():
 
@@ -76,4 +80,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
