@@ -33,10 +33,10 @@ class UIWidgetsModel:
         pyplot.figure(figsize=(12, 8))
         for i in range(len(percentage_and_dominance_list)):
             pyplot.subplot(1, n_clusters, i + 1)
-            # block[:] = percentage_and_dominance_list[i][1][::-1]
+            # block[:] = percentage_and_dominance_list[i][1][::-1] # bgr mode
             block[:] = percentage_and_dominance_list[i][
                 1
-            ]  # bgr(opencv) to rgb(matplotlib)
+            ] # rgb mode
             pyplot.imshow(block)
             pyplot.xticks([])
             pyplot.yticks([])

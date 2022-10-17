@@ -8,12 +8,13 @@ class ImageProcessingModel:
         pass
 
     def load_bgr_image(self, file):
+
         return Image.open(file)
 
     def load_rgb_image(self, file, image_path):
         # image = cv2.imread(image_path + "/" + file.name)
         # return cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        # image = cv2.imread(image_path + "/" + file.name)
+
         return cv2.imread(image_path + "/" + file.name)
 
     def get_r_g_b_pixel_values(self, image):
@@ -47,7 +48,9 @@ class ImageProcessingModel:
         return image
 
     def resize_image(self, image, height, width):
+
         return cv2.resize(image, (height, width), interpolation=cv2.INTER_AREA)
 
     def reshape_image(self, image):
+
         return numpy.reshape(image, (-1, 3))
